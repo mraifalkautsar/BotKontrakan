@@ -26,6 +26,8 @@
         const keamanan = ["Adit", "Raif", "Reza"];
         const air = ["Yayat", "Zaki", "Iza"];
         const rekber = ["Adit", "Iza", "Yayat", "Raif", "Zaki", "Reza"];
+        const nyuciSerbetDapur = ["Iza", "Adit", "Yayat", "Zaki", "Reza", "Raif"]
+        const nyuciKeset = ["Yayat", "Reza", "Raif", "Zaki", "Iza", "Adit"]
 
         function printPiketInfo() {
             let output = "";
@@ -45,6 +47,26 @@
 
             if ((getDayOfYear() - 5) % 7 === 0) {
                 output += "Hari sabtu berarti *bersih-bersih toilet*.\n";
+            }
+
+            if ((getDayOfYear() - 5) % 14 === 13) {
+                output += "Besok yang nyuci serbet dapur yaitu: " + nyuciSerbetDapur[(getDayOfYear() + 1) % 6]  + ".\n";
+            }
+
+            if ((getDayOfYear() - 5) % 14 === 0) {
+                output += "Pencuci serbet dapur malam ini: " + nyuciSerbetDapur[getDayOfYear() % 6]  + ".\n";
+            }
+
+            if ((getDayOfYear() - 5) % 28 === 26) {
+                output += "Lusa yang nyuci keset toilet yaitu: " + nyuciSerbetDapur[(getDayOfYear() + 2) % 6]  + ".\n";
+            }
+
+            if ((getDayOfYear() - 5) % 28 === 27) {
+                output += "Besok yang nyuci keset toilet yaitu: " + nyuciSerbetDapur[(getDayOfYear() + 1) % 6]  + ".\n";
+            }
+
+            if ((getDayOfYear() - 5) % 28 === 0) {
+                output += "Pencuci keset toilet malam ini: " + nyuciSerbetDapur[(getDayOfYear() + 1) % 6]  + ".\n";
             }
 
             output += "\nTugas dan tanggung jawab tiap PJ bisa diperiksa di deskripsi grup.\n";
