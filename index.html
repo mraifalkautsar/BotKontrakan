@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piket Info</title>
+</head>
+<body>
+    <h2>INFORMASI PIKET MALAM INI</h2>
+    <pre id="output"></pre>
+
+    <script>
+
+        function getDayOfYear() {
+            const today = new Date();
+            const start = new Date(today.getFullYear(), 0, 0);
+            const diff = today - start;
+            const oneDay = 1000 * 60 * 60 * 24;
+            const dayOfYear = Math.floor(diff / oneDay);
+            return dayOfYear;
+        }
+
+        const piketBawah = ["Reza", "Adit", "Raif"];
+        const piketAtas = ["Zaki", "Iza", "Yayat"];
+        const cuciPiring = ["Reza", "Raif", "Adit", "Iza", "Yayat", "Zaki"];
+        const keamanan = ["Adit", "Raif", "Reza"];
+        const air = ["Yayat", "Zaki", "Iza"];
+        const rekber = ["Adit", "Iza", "Yayat", "Raif", "Zaki", "Reza"];
+
+        function printPiketInfo() {
+            let output = "";
+            
+            output += "\n";
+            if (getDayOfYear() % 2 === 0) {
+                output += "Tidak ada piket malam ini.\n";
+            } else {
+                output += "Piket nyapu bawah: " + piketBawah[getDayOfYear() % 3] + "\n";
+                output += "Piket nyapu atas: " + piketAtas[getDayOfYear() % 3] + "\n";
+            }
+
+            output += "PJ dapur/cuci piring malam ini: " + cuciPiring[getDayOfYear() % 6] + "\n";
+            output += "PJ keamanan malam ini: " + keamanan[getDayOfYear() % 3] + "\n";
+            output += "PJ air malam ini: " + air[getDayOfYear() % 3] + "\n";
+            output += "PJ rekber malam ini: " + rekber[getDayOfYear() % 6] + "\n";
+
+            if ((getDayOfYear() - 5) % 7 === 0) {
+                output += "Hari sabtu berarti *bersih-bersih toilet*.\n";
+            }
+
+            output += "\nTugas dan tanggung jawab tiap PJ bisa diperiksa di deskripsi grup.\n";
+
+            document.getElementById("output").textContent = output;
+        }
+
+        // Run the function when the page loads
+        window.onload = printPiketInfo;
+    </script>
+</body>
+</html>
