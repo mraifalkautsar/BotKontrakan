@@ -13,7 +13,6 @@
     </style>
 </head>
 <body>
-    <h2>INFORMASI PIKET MALAM INI</h2>
     <pre id="output"></pre>
 
     <!-- Copy Button -->
@@ -40,6 +39,9 @@
 
         function printPiketInfo() {
             let output = "\n";
+
+            output += "INFO PIKET MALAM INI";
+
             if (getDayOfYear() % 2 === 0) {
                 output += "Tidak ada piket malam ini.\n";
             } else {
