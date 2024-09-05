@@ -4,13 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Piket Info</title>
+    <style>
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
     <h2>INFORMASI PIKET MALAM INI</h2>
     <pre id="output"></pre>
 
-    <script>
+    <!-- Copy Button -->
+    <button id="copyButton">Copy All Text</button>
 
+    <script>
         function getDayOfYear() {
             const today = new Date();
             const start = new Date(today.getFullYear(), 0, 0);
@@ -26,13 +35,11 @@
         const keamanan = ["Adit", "Raif", "Reza"];
         const air = ["Yayat", "Zaki", "Iza"];
         const rekber = ["Adit", "Iza", "Yayat", "Raif", "Zaki", "Reza"];
-        const nyuciSerbetDapur = ["Iza", "Adit", "Yayat", "Zaki", "Reza", "Raif"]
-        const nyuciKeset = ["Yayat", "Reza", "Raif", "Zaki", "Iza", "Adit"]
+        const nyuciSerbetDapur = ["Iza", "Adit", "Yayat", "Zaki", "Reza", "Raif"];
+        const nyuciKeset = ["Yayat", "Reza", "Raif", "Zaki", "Iza", "Adit"];
 
         function printPiketInfo() {
-            let output = "";
-            
-            output += "\n";
+            let output = "\n";
             if (getDayOfYear() % 2 === 0) {
                 output += "Tidak ada piket malam ini.\n";
             } else {
@@ -50,23 +57,23 @@
             }
 
             if ((getDayOfYear() - 5) % 14 === 13) {
-                output += "Besok yang nyuci serbet dapur yaitu: " + nyuciSerbetDapur[(getDayOfYear() + 1) % 6]  + ".\n";
+                output += "Besok yang nyuci serbet dapur yaitu: " + nyuciSerbetDapur[(getDayOfYear() + 1) % 6] + ".\n";
             }
 
             if ((getDayOfYear() - 5) % 14 === 0) {
-                output += "Pencuci serbet dapur malam ini: " + nyuciSerbetDapur[getDayOfYear() % 6]  + ".\n";
+                output += "Pencuci serbet dapur malam ini: " + nyuciSerbetDapur[getDayOfYear() % 6] + ".\n";
             }
 
             if ((getDayOfYear() - 5) % 28 === 26) {
-                output += "Lusa yang nyuci keset toilet yaitu: " + nyuciSerbetDapur[(getDayOfYear() + 2) % 6]  + ".\n";
+                output += "Lusa yang nyuci keset toilet yaitu: " + nyuciSerbetDapur[(getDayOfYear() + 2) % 6] + ".\n";
             }
 
             if ((getDayOfYear() - 5) % 28 === 27) {
-                output += "Besok yang nyuci keset toilet yaitu: " + nyuciSerbetDapur[(getDayOfYear() + 1) % 6]  + ".\n";
+                output += "Besok yang nyuci keset toilet yaitu: " + nyuciSerbetDapur[(getDayOfYear() + 1) % 6] + ".\n";
             }
 
             if ((getDayOfYear() - 5) % 28 === 0) {
-                output += "Pencuci keset toilet malam ini: " + nyuciSerbetDapur[(getDayOfYear() + 1) % 6]  + ".\n";
+                output += "Pencuci keset toilet malam ini: " + nyuciSerbetDapur[(getDayOfYear() + 1) % 6] + ".\n";
             }
 
             output += "\nTugas dan tanggung jawab tiap PJ bisa diperiksa di deskripsi grup.\n";
@@ -76,6 +83,33 @@
 
         // Run the function when the page loads
         window.onload = printPiketInfo;
+
+        // Function to copy text
+        function copyText() {
+            const textToCopy = document.getElementById("output").textContent;
+
+            // Create a temporary textarea to hold the text
+            const tempTextArea = document.createElement("textarea");
+            tempTextArea.value = textToCopy;
+
+            // Append the textarea to the body (offscreen)
+            document.body.appendChild(tempTextArea);
+
+            // Select the text
+            tempTextArea.select();
+
+            // Execute the copy command
+            document.execCommand("copy");
+
+            // Remove the temporary textarea
+            document.body.removeChild(tempTextArea);
+
+            // Optional: Alert the user that text is copied
+            alert("Text copied to clipboard!");
+        }
+
+        // Add an event listener to the button
+        document.getElementById("copyButton").addEventListener("click", copyText);
     </script>
 </body>
 </html>
