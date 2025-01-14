@@ -28,54 +28,86 @@
             return dayOfYear;
         }
 
-        const piketBawah = ["Reza", "Adit", "Raif"];
-        const piketAtas = ["Zaki", "Iza", "Yayat"];
         const cuciPiring = ["Reza", "Raif", "Adit", "Iza", "Yayat", "Zaki"];
         const keamanan = ["Adit", "Raif", "Reza"];
-        const air = ["Yayat", "Zaki", "Iza"];
-        const rekber = ["Adit", "Iza", "Yayat", "Raif", "Zaki", "Reza"];
+        const piketBawah = ["Reza", "Adit", "Raif"];
+        const piketAtas = ["Zaki", "Iza", "Yayat"];
+        const bersihToiletAtas = ["Yayat", "Zaki", "Iza"];
+        const bersihToiletBawah = ["Reza", "Raif", "Adit"];
         const nyuciSerbetDapur = ["Iza", "Adit", "Yayat", "Zaki", "Reza", "Raif"];
         const nyuciKeset = ["Yayat", "Reza", "Raif", "Zaki", "Iza", "Adit"];
 
         function printPiketInfo() {
             let output = "\n";
 
-            output += "INFO PIKET MALAM INI \n \n";
-
-            if (getDayOfYear() % 2 === 0) {
-                output += "Tidak ada piket malam ini.\n";
-            } else {
-                output += "Piket nyapu bawah: " + piketBawah[getDayOfYear() % 3] + "\n";
-                output += "Piket nyapu atas: " + piketAtas[getDayOfYear() % 3] + "\n \n";
+            if ((getDayOfYear() - 5) % 7 === 0) {
+                output += "JADWAL HARI INI (WEEKEND)\n";
+            }
+            else {
+                output += "JADWAL HARI INI\n"
             }
 
-            output += "PJ dapur/cuci piring malam ini: " + cuciPiring[getDayOfYear() % 6] + "\n";
-            output += "PJ keamanan malam ini: " + keamanan[getDayOfYear() % 3] + "\n";
-            output += "PJ air malam ini: " + air[getDayOfYear() % 3] + "\n";
-            output += "PJ rekber malam ini: " + rekber[getDayOfYear() % 6] + "\n";
+            output += "PJ dapur/cuci piring: " + cuciPiring[getDayOfYear() % 6] + "\n";
+            output += "PJ keamanan: " + keamanan[getDayOfYear() % 3] + "\n";
+            
+            if ((getDayOfYear() - 5) % 7 === 0) {
+                output += "Piket atas: " + nyuciSerbetDapur[getDayOfYear() % 6] + ".\n";
+            }
 
             if ((getDayOfYear() - 5) % 7 === 0) {
-                output += "Hari sabtu berarti *bersih-bersih toilet*.\n";
-            }
-
-            if ((getDayOfYear() - 5) % 14 === 13) {
-                output += "Besok yang nyuci serbet dapur yaitu: " + nyuciSerbetDapur[(getDayOfYear() + 1) % 6] + ".\n";
+                output += "Piket bawah: " + nyuciSerbetDapur[getDayOfYear() % 6] + ".\n";
             }
 
             if ((getDayOfYear() - 5) % 14 === 0) {
-                output += "Pencuci serbet dapur malam ini: " + nyuciSerbetDapur[getDayOfYear() % 6] + ".\n";
+                output += "Pembersih toilet atas: " + nyuciSerbetDapur[getDayOfYear() % 6] + ".\n";
             }
 
-            if ((getDayOfYear() - 5) % 28 === 26) {
-                output += "Lusa yang nyuci keset toilet yaitu: " + nyuciSerbetDapur[(getDayOfYear() + 2) % 6] + ".\n";
+            if ((getDayOfYear() - 5) % 14 === 0) {
+                output += "Pembersih toilet bawah: " + nyuciSerbetDapur[getDayOfYear() % 6] + ".\n";
             }
 
-            if ((getDayOfYear() - 5) % 28 === 27) {
-                output += "Besok yang nyuci keset toilet yaitu: " + nyuciSerbetDapur[(getDayOfYear() + 1) % 6] + ".\n";
+            if ((getDayOfYear() - 5) % 21 === 0) {
+                output += "Pencuci serbet dapur: " + nyuciSerbetDapur[getDayOfYear() % 6] + ".\n";
             }
 
             if ((getDayOfYear() - 5) % 28 === 0) {
-                output += "Pencuci keset toilet malam ini: " + nyuciSerbetDapur[(getDayOfYear()) % 6] + ".\n";
+                output += "Pencuci keset toilet weekend ini: " + nyuciSerbetDapur[(getDayOfYear()) % 6] + ".\n";
+            }
+
+            output += "\n";
+
+            if ((getDayOfYear() - 4) % 7 === 0) {
+                output += "JADWAL BESOK (WEEKEND)\n";
+            }
+            else {
+                output += "JADWAL BESOK\n"
+            }
+
+            output += "PJ dapur/cuci piring: " + cuciPiring[(getDayOfYear() + 1) % 6] + "\n";
+            output += "PJ keamanan: " + keamanan[(getDayOfYear() + 1) % 3] + "\n";
+            
+            if ((getDayOfYear() - 4) % 7 === 0) {
+                output += "Piket atas: " + nyuciSerbetDapur[getDayOfYear() % 6] + ".\n";
+            }
+
+            if ((getDayOfYear() - 4) % 7 === 0) {
+                output += "Piket bawah: " + nyuciSerbetDapur[getDayOfYear() % 6] + ".\n";
+            }
+
+            if ((getDayOfYear() - 4) % 14 === 0) {
+                output += "Pembersih toilet atas: " + nyuciSerbetDapur[getDayOfYear() % 6] + ".\n";
+            }
+
+            if ((getDayOfYear() - 4) % 14 === 0) {
+                output += "Pembersih toilet bawah: " + nyuciSerbetDapur[getDayOfYear() % 6] + ".\n";
+            }
+
+            if ((getDayOfYear() - 4) % 21 === 0) {
+                output += "Pencuci serbet dapur: " + nyuciSerbetDapur[getDayOfYear() % 6] + ".\n";
+            }
+
+            if ((getDayOfYear() - 4) % 28 === 0) {
+                output += "Pencuci keset toilet weekend ini: " + nyuciSerbetDapur[(getDayOfYear()) % 6] + ".\n";
             }
 
             output += "\nTugas dan tanggung jawab tiap PJ bisa diperiksa di deskripsi grup.\n";
