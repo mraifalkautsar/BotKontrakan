@@ -71,7 +71,7 @@
             }
 
             if ((getDayOfYear() - 5) % 28 === 0) {
-                output += "Pencuci keset toilet weekend ini: " + nyuciSerbetDapur[(getDayOfYear()) % 6] + ".\n";
+                output += "Pencuci keset toilet: " + nyuciSerbetDapur[(getDayOfYear()) % 6] + ".\n";
             }
 
             output += "\n";
@@ -83,15 +83,15 @@
                 output += "JADWAL BESOK\n"
             }
 
-            output += "PJ dapur/cuci piring: " + cuciPiring[(getDayOfYear() + 1) % 6] + "\n";
-            output += "PJ keamanan: " + keamanan[(getDayOfYear() + 1) % 3] + "\n";
+            output += "Dapur/cuci piring: " + cuciPiring[(getDayOfYear() + 1) % 6] + "\n";
+            output += "Keamanan: " + keamanan[(getDayOfYear() + 1) % 3] + "\n";
             
             if ((getDayOfYear() - 4) % 7 === 0) {
-                output += "Piket atas: " + nyuciSerbetDapur[getDayOfYear() % 6] + ".\n";
+                output += "Sapu atas: " + nyuciSerbetDapur[getDayOfYear() % 6] + ".\n";
             }
 
             if ((getDayOfYear() - 4) % 7 === 0) {
-                output += "Piket bawah: " + nyuciSerbetDapur[getDayOfYear() % 6] + ".\n";
+                output += "Sapu bawah: " + nyuciSerbetDapur[getDayOfYear() % 6] + ".\n";
             }
 
             if ((getDayOfYear() - 4) % 14 === 0) {
@@ -107,7 +107,7 @@
             }
 
             if ((getDayOfYear() - 4) % 28 === 0) {
-                output += "Pencuci keset toilet weekend ini: " + nyuciSerbetDapur[(getDayOfYear()) % 6] + ".\n";
+                output += "Pencuci keset toilet: " + nyuciSerbetDapur[(getDayOfYear()) % 6] + ".\n";
             }
 
             output += "\nTugas dan tanggung jawab tiap PJ bisa diperiksa di deskripsi grup.\n";
