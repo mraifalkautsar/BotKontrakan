@@ -47,8 +47,8 @@
                 output += "JADWAL HARI INI\n"
             }
 
-            output += "PJ dapur/cuci piring: " + cuciPiring[getDayOfYear() % 6] + "\n";
-            output += "PJ keamanan: " + keamanan[getDayOfYear() % 3] + "\n";
+            output += "Dapur/cuci piring: " + cuciPiring[getDayOfYear() % 6] + "\n";
+            output += "Keamanan: " + keamanan[getDayOfYear() % 3] + "\n";
             
             if ((getDayOfYear() - 5) % 7 === 0) {
                 output += "Sapu atas: " + nyuciSerbetDapur[getDayOfYear() % 6] + ".\n";
