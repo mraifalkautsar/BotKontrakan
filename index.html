@@ -47,7 +47,7 @@
                 output += "JADWAL HARI INI\n"
             }
 
-            output += "Dapur/cuci piring: " + cuciPiring[getDayOfYear() % 6] + "\n";
+            output += "Bersih-bersih dapur: " + cuciPiring[getDayOfYear() % 6] + "\n";
             output += "Keamanan: " + keamanan[getDayOfYear() % 3] + "\n";
             
             if ((getDayOfYear() - 5) % 7 === 0) {
@@ -83,7 +83,7 @@
                 output += "JADWAL BESOK\n"
             }
 
-            output += "Dapur/cuci piring: " + cuciPiring[(getDayOfYear() + 1) % 6] + "\n";
+            output += "Bersih-bersih dapur: " + cuciPiring[(getDayOfYear() + 1) % 6] + "\n";
             output += "Keamanan: " + keamanan[(getDayOfYear() + 1) % 3] + "\n";
             
             if ((getDayOfYear() - 4) % 7 === 0) {
