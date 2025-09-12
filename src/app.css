@@ -1,0 +1,27 @@
+#app {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  text-align: left;
+  color: #374151;
+  background-color: #f8fafc;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.preact:hover {
+  filter: drop-shadow(0 0 2em #673ab8aa);
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}

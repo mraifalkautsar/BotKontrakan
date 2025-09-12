@@ -1,0 +1,36 @@
+{
+  "tasks": [
+    {
+      "name": "Test",
+      "type": "individual",
+      "assignees": [
+        "Reza",
+        "Yayat"
+      ],
+      "recurrence": "once",
+      "customInterval": 1,
+      "startDate": "2025-09-12",
+      "points": 10,
+      "id": "1757661843889",
+      "completions": {}
+    },
+    {
+      "name": "Testtt",
+      "type": "individual",
+      "assignees": [
+        "Ra'if"
+      ],
+      "recurrence": "once",
+      "customInterval": 1,
+      "startDate": "2025-09-13",
+      "points": 10,
+      "id": "1757661864706",
+      "completions": {}
+    }
+  ],
+  "checkIns": {},
+  "scores": {
+    "house": 0,
+    "individuals": {}
+  }
+}
