@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { CheckCircle, Circle, Users, User, Home, Award } from 'lucide-preact';
+import { getTodayString } from '../utils/dates';
 
 const MainDashboard = ({ 
   getTodayTasks, 
@@ -11,7 +12,7 @@ const MainDashboard = ({
   completeTask 
 }) => {
   const todayTasks = getTodayTasks();
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayString();
 
   return (
     <div className="p-6 max-w-7xl mx-auto">

@@ -1,8 +1,9 @@
+import { getLocalDateString, parseLocalDate, addDays, isSameDay } from './dates';
+
 /**
- * Utility functions for task management
+ * Yang beginian harusnya di server ...
  */
 
-// Generates recurring task instances based on configured task parameters
 export const generateTaskInstances = (tasks) => {
   const instances = [];
   const today = new Date();
@@ -11,13 +12,11 @@ export const generateTaskInstances = (tasks) => {
   tasks.forEach(task => {
     if (!task.startDate) return;
     
-    const startDate = new Date(task.startDate);
-    startDate.setHours(0, 0, 0, 0);
+    const startDate = parseLocalDate(task.startDate);
+    if (!startDate) return;
     
-    // Generate instances for the next 60 days
     for (let d = 0; d < 60; d++) {
-      const checkDate = new Date(today);
-      checkDate.setDate(today.getDate() + d);
+      const checkDate = addDays(today, d);
       
       if (checkDate < startDate) continue;
       
@@ -26,7 +25,7 @@ export const generateTaskInstances = (tasks) => {
       
       switch (task.recurrence) {
         case 'once':
-          shouldInclude = checkDate.getTime() === startDate.getTime();
+          shouldInclude = isSameDay(checkDate, startDate);
           break;
         case 'daily':
           shouldInclude = true;
@@ -35,25 +34,27 @@ export const generateTaskInstances = (tasks) => {
           shouldInclude = checkDate.getDay() === startDate.getDay();
           break;
         case 'custom-days':
-          shouldInclude = daysSinceStart % task.customInterval === 0;
+          shouldInclude = daysSinceStart % (task.customInterval || 1) === 0;
           break;
         case 'custom-weeks':
-          shouldInclude = daysSinceStart % (task.customInterval * 7) === 0;
+          shouldInclude = daysSinceStart % ((task.customInterval || 1) * 7) === 0;
           break;
-        case 'custom-months':
+        case 'custom-months': {
           const monthsDiff = (checkDate.getFullYear() - startDate.getFullYear()) * 12 + 
                            (checkDate.getMonth() - startDate.getMonth());
-          shouldInclude = monthsDiff % task.customInterval === 0 && 
+          shouldInclude = monthsDiff % (task.customInterval || 1) === 0 && 
                         checkDate.getDate() === startDate.getDate();
           break;
+        }
       }
       
       if (shouldInclude) {
+        const instanceDate = getLocalDateString(checkDate);
         instances.push({
           ...task,
-          instanceDate: checkDate.toISOString().split('T')[0],
-          instanceId: `${task.id}-${checkDate.toISOString().split('T')[0]}`,
-          completed: task.completions?.[checkDate.toISOString().split('T')[0]] || false
+          instanceDate,
+          instanceId: `${task.id}-${instanceDate}`,
+          completed: task.completions?.[instanceDate] || false
         });
       }
     }

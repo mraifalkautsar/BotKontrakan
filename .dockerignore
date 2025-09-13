@@ -1,0 +1,49 @@
+# Version control
+.git
+.github
+.gitignore
+
+# Node.js
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts
+dist
+build
+*.local
+
+# Environment variables and secrets
+.env
+.env.*
+*.env
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Development files
+.vscode
+.idea
+*.md
+LICENSE
+*.log
+
+# Data (handled through volume mount)
+data/
+
+# Test files
+test
+tests
+*.test.js
+*.spec.js
+
+# Temporary files
+.DS_Store
+.Thumbs.db
+*.swp
+*.swo
+tmp/
+temp/

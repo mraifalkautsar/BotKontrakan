@@ -1,5 +1,8 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
+import { getLocalDateString, parseLocalDate, addDays, formatDate } from '../utils/dates';
+
+// TODO: harusnya client gak nge-compute jadwalnya. Yang beginian bisa di-serve dari server.
 
 const CalendarView = ({ taskInstances }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -26,12 +29,13 @@ const CalendarView = ({ taskInstances }) => {
   const getTasksForDay = (day) => {
     if (!day) return [];
     const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
-    const dateStr = date.toISOString().split('T')[0];
+    const dateStr = getLocalDateString(date);
     return taskInstances.filter(t => t.instanceDate === dateStr);
   };
 
   const today = new Date();
-  const todayStr = today.toISOString().split('T')[0];
+  today.setHours(0, 0, 0, 0);
+  const todayStr = getLocalDateString(today);
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -49,7 +53,7 @@ const CalendarView = ({ taskInstances }) => {
             ←
           </button>
           <span className="text-xl font-semibold">
-            {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+            {formatDate(currentMonth, { month: 'long', year: 'numeric' })}
           </span>
           <button
             onClick={() => {
@@ -73,7 +77,7 @@ const CalendarView = ({ taskInstances }) => {
           ))}
           {getDaysInMonth().map((day, idx) => {
             const tasks = getTasksForDay(day);
-            const date = day ? new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day).toISOString().split('T')[0] : null;
+            const date = day ? getLocalDateString(new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)) : null;
             const isToday = date === todayStr;
             const isPast = date && date < todayStr;
             

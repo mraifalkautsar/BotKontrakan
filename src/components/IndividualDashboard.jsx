@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { CheckCircle, Circle, Clock, Star } from 'lucide-preact';
+import { getTodayString, addDays, formatDate } from '../utils/dates';
 
 const IndividualDashboard = ({
   currentUser,
@@ -13,7 +14,7 @@ const IndividualDashboard = ({
 }) => {
   if (!currentUser) return null;
   
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayString();
   const hasCheckedIn = checkIns[currentUser]?.[today];
   const weekTasks = getWeekTasks(currentUser);
   const todayTasks = getTodayTasks().filter(t => 
@@ -44,7 +45,7 @@ const IndividualDashboard = ({
             {!hasCheckedIn ? (
               <button
                 onClick={() => checkIn(currentUser)}
-                className="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all"
+                className="bg-green-500 text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all"
               >
                 <Clock className="w-5 h-5 inline mr-2" />
                 ABSEN
@@ -103,7 +104,7 @@ const IndividualDashboard = ({
           <div key={day.date} className={`bg-white p-3 rounded-lg shadow-md ${idx === 0 ? 'ring-2 ring-purple-500' : ''}`}>
             <div className="font-semibold text-center mb-2">{day.dayName}</div>
             <div className="text-xs text-center text-gray-500 mb-2">
-              {new Date(day.date).getDate()}
+              {formatDate(day.date, { day: 'numeric' })}
             </div>
             <div className="space-y-1">
               {day.tasks.map(task => (

@@ -1,5 +1,8 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
+import { getTodayString } from '../utils/dates';
+
+// TODO: Udah ada opsi buat bikin task, tapi belum ada buat ngehapus.
 
 const CreateTask = ({ setTasks, setCurrentView, tasks, houseMembers }) => {
   const [newTask, setNewTask] = useState({
@@ -8,7 +11,7 @@ const CreateTask = ({ setTasks, setCurrentView, tasks, houseMembers }) => {
     assignees: [],
     recurrence: 'once',
     customInterval: 1,
-    startDate: new Date().toISOString().split('T')[0],
+    startDate: getTodayString(),
     points: 10
   });
 
@@ -33,7 +36,7 @@ const CreateTask = ({ setTasks, setCurrentView, tasks, houseMembers }) => {
       assignees: [],
       recurrence: 'once',
       customInterval: 1,
-      startDate: new Date().toISOString().split('T')[0],
+      startDate: getTodayString(),
       points: 10
     });
     setCurrentView('dashboard');

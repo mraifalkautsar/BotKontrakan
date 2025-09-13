@@ -1,23 +1,20 @@
 import { h } from 'preact';
 import { useState, useMemo } from 'preact/hooks';
-
 import { useServerData } from './hooks/useServerData';
-
 import Navigation from './components/Navigation';
 import MainDashboard from './components/MainDashboard';
 import IndividualDashboard from './components/IndividualDashboard';
 import Analytics from './components/Analytics';
 import CalendarView from './components/CalendarView';
 import CreateTask from './components/CreateTask';
-
 import { generateTaskInstances } from './utils/tasks';
+import { getTodayString, getLocalDateString, addDays } from './utils/dates';
 
 const App = () => {
   const [currentView, setCurrentView] = useState('dashboard');
   const [currentUser, setCurrentUser] = useState(null);
   const [showConfetti, setShowConfetti] = useState(false);
   
-  // Use server data instead of localStorage
   const {
     tasks, setTasks,
     checkIns, setCheckIns,
@@ -30,18 +27,18 @@ const App = () => {
   const taskInstances = useMemo(() => generateTaskInstances(tasks || []), [tasks]);
 
   const getTodayTasks = () => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getTodayString();
     return taskInstances.filter(t => t.instanceDate === today);
   };
 
   const getWeekTasks = (userName) => {
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
     const weekTasks = [];
     
     for (let i = 0; i < 7; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-      const dateStr = date.toISOString().split('T')[0];
+      const date = addDays(today, i);
+      const dateStr = getLocalDateString(date);
       
       const dayTasks = taskInstances.filter(t => 
         t.instanceDate === dateStr && 
@@ -50,7 +47,7 @@ const App = () => {
       
       weekTasks.push({
         date: dateStr,
-        dayName: date.toLocaleDateString('en-US', { weekday: 'short' }),
+        dayName: date.toLocaleDateString('id-ID', { weekday: 'short' }),
         tasks: dayTasks
       });
     }
@@ -99,7 +96,7 @@ const App = () => {
   };
 
   const checkIn = (userName) => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getTodayString();
     setCheckIns({
       ...checkIns,
       [userName]: {
@@ -109,7 +106,6 @@ const App = () => {
     });
   };
 
-  // Loading and error states
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">

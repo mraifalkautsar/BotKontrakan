@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { TrendingUp, AlertCircle, Clock } from 'lucide-preact';
+import { getTodayString, addDays, formatDate } from '../utils/dates';
 
 const Analytics = ({
   taskInstances,
@@ -8,14 +9,13 @@ const Analytics = ({
   checkIns
 }) => {
   const getMissedTasks = () => {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
     const missed = [];
     
-    for (let i = 0; i < 30; i++) {
-      const checkDate = new Date(yesterday);
-      checkDate.setDate(yesterday.getDate() - i);
-      const dateStr = checkDate.toISOString().split('T')[0];
+    for (let i = 1; i <= 30; i++) {
+      const checkDate = addDays(today, -i);
+      const dateStr = getTodayString(checkDate);
       
       const dayTasks = taskInstances.filter(t => 
         t.instanceDate === dateStr && !t.completed
@@ -35,18 +35,27 @@ const Analytics = ({
   const getMissedCheckIns = () => {
     const missed = [];
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
     
+    // Use a Set to ensure we don't add duplicate entries
+    const processedEntries = new Set();
+    
+    // Only check the last 3 days instead of 7
     houseMembers.forEach(member => {
-      for (let i = 1; i < 8; i++) {
-        const checkDate = new Date(today);
-        checkDate.setDate(today.getDate() - i);
-        const dateStr = checkDate.toISOString().split('T')[0];
+      for (let i = 1; i <= 3; i++) {
+        const checkDate = addDays(today, -i);
+        const dateStr = getTodayString(checkDate);
         
+        // Only add if member hasn't checked in AND this entry hasn't been processed yet
         if (!checkIns[member]?.[dateStr]) {
-          missed.push({
-            member,
-            date: dateStr
-          });
+          const entryKey = `${member}-${dateStr}`;
+          if (!processedEntries.has(entryKey)) {
+            processedEntries.add(entryKey);
+            missed.push({
+              member,
+              date: dateStr
+            });
+          }
         }
       }
     });
@@ -82,7 +91,7 @@ const Analytics = ({
                     <div className="w-32 bg-gray-200 rounded-full h-4">
                       <div 
                         className="bg-gradient-to-r from-purple-500 to-pink-500 h-4 rounded-full"
-                        style={{ width: `${Math.min((score / Math.max(...Object.values(scores.individuals))) * 100, 100)}%` }}
+                        style={{ width: `${Math.min((score / Math.max(...Object.values(scores.individuals), 1)) * 100, 100)}%` }}
                       />
                     </div>
                     <span className="font-bold text-purple-600">{score}</span>
@@ -102,7 +111,7 @@ const Analytics = ({
               <div key={idx} className="text-sm p-2 bg-red-50 rounded">
                 <div className="font-medium">{task.name}</div>
                 <div className="text-xs text-gray-600">
-                  {new Date(task.missedDate).toLocaleDateString()} • tugas {task.type === 'individual' ? 'individu' : task.type === 'group' ? 'grup' : 'rumah'}
+                  {formatDate(task.missedDate)} • tugas {task.type === 'individual' ? 'individu' : task.type === 'group' ? 'grup' : 'rumah'}
                   {task.assignees && ` • ${task.assignees.join(', ')}`}
                 </div>
               </div>
@@ -117,14 +126,14 @@ const Analytics = ({
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h3 className="text-xl font-semibold mb-4 flex items-center">
           <Clock className="w-5 h-5 mr-2 text-yellow-500" />
-          Absensi Terlewat (7 Hari Terakhir)
+          Absensi Terlewat (3 Hari Terakhir)
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {missedCheckIns.map((checkIn, idx) => (
-            <div key={idx} className="text-sm p-2 bg-yellow-50 rounded">
+            <div key={`${checkIn.member}-${checkIn.date}-${idx}`} className="text-sm p-2 bg-yellow-50 rounded">
               <span className="font-medium">{checkIn.member}</span>
               <span className="text-gray-600 ml-2">
-                {new Date(checkIn.date).toLocaleDateString()}
+                {formatDate(checkIn.date)}
               </span>
             </div>
           ))}
