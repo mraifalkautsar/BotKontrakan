@@ -44,14 +44,14 @@ RUN mkdir -p data && \
 USER nodeuser
 
 # Expose port
-EXPOSE 3001
+EXPOSE 15000
 
 # Set environment variables
-ENV PORT=3001
+ENV PORT=15000
 
 # Add health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3001/api/health || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:15000/api/health || exit 1
 
 # Add metadata
 LABEL maintainer="Kontrakan Team" \

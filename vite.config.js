@@ -5,11 +5,11 @@ import preact from '@preact/preset-vite';
 export default defineConfig({
   plugins: [preact()],
   server: {
-    port: 3000,
+    port: 15001,
     proxy: {
       // Proxy API requests to the backend during development
       '/api': {
-        target: 'http://localhost:3001',
+        target: 'http://localhost:15000',
         changeOrigin: true,
         secure: false
       }
@@ -20,6 +20,6 @@ export default defineConfig({
     'import.meta.env.VITE_API_URL': 
       process.env.NODE_ENV === 'production' 
         ? JSON.stringify('/api') 
-        : JSON.stringify('http://localhost:3001/api')
+        : JSON.stringify('http://localhost:15000/api')
   }
 });

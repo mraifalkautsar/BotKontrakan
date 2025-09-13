@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev:client": "vite",
-    "dev:server": "node src/backend/server.js",
+    "dev:server": "PORT=15000 node src/backend/server.js",
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "build": "vite build",
-    "start": "NODE_ENV=production node src/backend/server.js",
+    "start": "NODE_ENV=production PORT=15000 node src/backend/server.js",
     "preview": "vite preview"
   },
   "dependencies": {
