@@ -60,6 +60,81 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// User credentials store - in production, use a database and hash passwords
+const users = {
+  'raif123': { name: 'Ra\'if', role: 'user' },
+  'reza123': { name: 'Reza', role: 'user' },
+  'yayat123': { name: 'Yayat', role: 'user' },
+  'iza123': { name: 'Iza', role: 'user' },
+  'zaki123': { name: 'Zaki', role: 'user' },
+  'HRRZYA22': { name: null, role: 'admin' }
+};
+
+// Authentication endpoint
+app.post('/api/auth/login', (req, res) => {
+  const { password } = req.body;
+  
+  if (users[password]) {
+    // Create a session token (in production use proper JWT or session management)
+    const token = generateToken();
+    const user = users[password];
+    
+    // Store token-user mapping (in production use Redis or a database)
+    sessions[token] = {
+      user: user.name,
+      role: user.role,
+      timestamp: Date.now()
+    };
+    
+    res.json({
+      success: true,
+      token,
+      user: user.name
+    });
+  } else {
+    res.status(401).json({
+      success: false,
+      message: 'Password salah. Silakan coba lagi.'
+    });
+  }
+});
+
+// Session validation endpoint
+app.get('/api/auth/validate', (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  
+  if (token && sessions[token]) {
+    res.json({
+      authenticated: true,
+      user: sessions[token].user
+    });
+  } else {
+    res.status(401).json({
+      authenticated: false
+    });
+  }
+});
+
+// Logout endpoint
+app.post('/api/auth/logout', (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  
+  if (token && sessions[token]) {
+    delete sessions[token];
+  }
+  
+  res.json({ success: true });
+});
+
+// Helper function to generate a token
+function generateToken() {
+  return Math.random().toString(36).substring(2, 15) + 
+         Math.random().toString(36).substring(2, 15);
+}
+
+// In-memory session store (use Redis or a database in production)
+const sessions = {};
+
 // For production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../../dist')));

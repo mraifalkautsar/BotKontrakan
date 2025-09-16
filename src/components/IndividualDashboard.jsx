@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { CheckCircle, Circle, Clock, Star } from 'lucide-preact';
+import { CheckCircle, Circle, Clock, Star, Lock } from 'lucide-preact';
 import { getTodayString, addDays, formatDate } from '../utils/dates';
 
 const IndividualDashboard = ({
@@ -10,12 +10,14 @@ const IndividualDashboard = ({
   scores,
   showConfetti,
   completeTask,
-  checkIn
+  checkIn,
+  loggedInUser
 }) => {
   if (!currentUser) return null;
   
   const today = getTodayString();
   const hasCheckedIn = checkIns[currentUser]?.[today];
+  const canCheckIn = currentUser === loggedInUser;
   const weekTasks = getWeekTasks(currentUser);
   const todayTasks = getTodayTasks().filter(t => 
     t.type === 'individual' ? t.assignees?.includes(currentUser) : true
@@ -32,7 +34,10 @@ const IndividualDashboard = ({
       <div className="mb-8 bg-gradient-to-r from-purple-500 to-pink-500 text-white p-6 rounded-xl shadow-lg">
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-3xl font-bold mb-2">Dasbor {currentUser}</h2>
+            <h2 className="text-3xl font-bold mb-2">
+              Dasbor {currentUser}
+              {currentUser === loggedInUser && <span className="text-sm ml-2">(Anda)</span>}
+            </h2>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <Star className="w-6 h-6" />
@@ -43,13 +48,20 @@ const IndividualDashboard = ({
           </div>
           <div>
             {!hasCheckedIn ? (
-              <button
-                onClick={() => checkIn(currentUser)}
-                className="bg-green-500 text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all"
-              >
-                <Clock className="w-5 h-5 inline mr-2" />
-                ABSEN
-              </button>
+              canCheckIn ? (
+                <button
+                  onClick={() => checkIn(currentUser)}
+                  className="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all"
+                >
+                  <Clock className="w-5 h-5 inline mr-2" />
+                  ABSEN
+                </button>
+              ) : (
+                <div className="bg-white/10 px-6 py-3 rounded-lg">
+                  <Lock className="w-5 h-5 inline mr-2" />
+                  Belum Absen
+                </div>
+              )
             ) : (
               <div className="bg-white/20 px-6 py-3 rounded-lg">
                 <CheckCircle className="w-5 h-5 inline mr-2" />
@@ -59,6 +71,14 @@ const IndividualDashboard = ({
           </div>
         </div>
       </div>
+
+      {!canCheckIn && (
+        <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6 rounded">
+          <p className="text-yellow-700">
+            <strong>Catatan:</strong> Anda melihat dasbor pengguna lain. Anda tidak dapat absen atau menyelesaikan tugas untuk pengguna ini.
+          </p>
+        </div>
+      )}
 
       <h3 className="text-2xl font-bold mb-4">Tugas Hari Ini</h3>
       <div className="space-y-3 mb-8">
@@ -84,7 +104,7 @@ const IndividualDashboard = ({
                     </div>
                   </div>
                 </div>
-                {!task.completed && task.type === 'individual' && (
+                {!task.completed && task.type === 'individual' && canCheckIn && (
                   <button
                     onClick={() => completeTask(task.id, today)}
                     className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all"

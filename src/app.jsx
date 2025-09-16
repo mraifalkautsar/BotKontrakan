@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useState, useMemo } from 'preact/hooks';
+import { useState, useEffect, useMemo } from 'preact/hooks';
 import { useServerData } from './hooks/useServerData';
 import Navigation from './components/Navigation';
 import MainDashboard from './components/MainDashboard';
@@ -7,13 +7,54 @@ import IndividualDashboard from './components/IndividualDashboard';
 import Analytics from './components/Analytics';
 import CalendarView from './components/CalendarView';
 import CreateTask from './components/CreateTask';
+import Login from './components/Login';
 import { generateTaskInstances } from './utils/tasks';
 import { getTodayString, getLocalDateString, addDays } from './utils/dates';
 
 const App = () => {
   const [currentView, setCurrentView] = useState('dashboard');
   const [currentUser, setCurrentUser] = useState(null);
+  const [loggedInUser, setLoggedInUser] = useState(null); // Track who is logged in
   const [showConfetti, setShowConfetti] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
+  
+  useEffect(() => {
+    const validateAuth = async () => {
+      const authData = localStorage.getItem('kontrakan-auth');
+      if (authData) {
+        try {
+          const { token } = JSON.parse(authData);
+          
+          const response = await fetch('/api/auth/validate', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          
+          const data = await response.json();
+          
+          if (data.authenticated) {
+            setIsAuthenticated(true);
+            setLoggedInUser(data.user);
+            if (data.user) {
+              setCurrentUser(data.user);
+              setCurrentView('individual');
+            }
+          } else {
+            // Clear invalid auth data
+            localStorage.removeItem('kontrakan-auth');
+          }
+        } catch (error) {
+          console.error('Error validating authentication:', error);
+          localStorage.removeItem('kontrakan-auth');
+        }
+      }
+      setIsAuthLoading(false);
+    };
+    
+    validateAuth();
+  }, []);
   
   const {
     tasks, setTasks,
@@ -96,6 +137,12 @@ const App = () => {
   };
 
   const checkIn = (userName) => {
+    // Only allow checking in for self
+    if (userName !== loggedInUser) {
+      console.error("Cannot check in for another user");
+      return;
+    }
+    
     const today = getTodayString();
     setCheckIns({
       ...checkIns,
@@ -105,6 +152,51 @@ const App = () => {
       }
     });
   };
+
+  const handleLogout = async () => {
+    const authData = localStorage.getItem('kontrakan-auth');
+    if (authData) {
+      try {
+        const { token } = JSON.parse(authData);
+        
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+      } catch (error) {
+        console.error('Error during logout:', error);
+      }
+    }
+    
+    localStorage.removeItem('kontrakan-auth');
+    setIsAuthenticated(false);
+    setCurrentUser(null);
+    setLoggedInUser(null);
+  };
+
+  if (isAuthLoading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-semibold mb-4">Memuat...</h2>
+          <p>Mohon tunggu sementara kami memverifikasi autentikasi Anda</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Login onLogin={(user) => {
+      setIsAuthenticated(true);
+      setLoggedInUser(user);
+      if (user) {
+        setCurrentUser(user);
+        setCurrentView('individual');
+      }
+    }} />;
+  }
 
   if (loading) {
     return (
@@ -139,6 +231,8 @@ const App = () => {
         setCurrentView={setCurrentView} 
         setCurrentUser={setCurrentUser}
         currentUser={currentUser}
+        loggedInUser={loggedInUser}
+        onLogout={handleLogout}
       />
       {currentView === 'dashboard' && !currentUser && (
         <MainDashboard
@@ -146,9 +240,12 @@ const App = () => {
           showConfetti={showConfetti}
           scores={scores}
           houseMembers={houseMembers}
+          checkIns={checkIns}
+          checkIn={checkIn}
           setCurrentUser={setCurrentUser}
           setCurrentView={setCurrentView}
           completeTask={completeTask}
+          loggedInUser={loggedInUser}
         />
       )}
       {currentView === 'individual' && currentUser && (
@@ -161,6 +258,7 @@ const App = () => {
           showConfetti={showConfetti}
           completeTask={completeTask}
           checkIn={checkIn}
+          loggedInUser={loggedInUser}
         />
       )}
       {currentView === 'analytics' && (
@@ -186,7 +284,6 @@ const App = () => {
       )}
     </div>
   );
-
 };
 
 export { App };

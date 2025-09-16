@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { CheckCircle, Circle, Users, User, Home, Award } from 'lucide-preact';
+import { CheckCircle, Circle, Users, User, Home, Award, Clock, Lock } from 'lucide-preact';
 import { getTodayString } from '../utils/dates';
 
 const MainDashboard = ({ 
@@ -7,9 +7,12 @@ const MainDashboard = ({
   showConfetti, 
   scores,
   houseMembers,
+  checkIns,
+  checkIn,
   setCurrentUser,
   setCurrentView,
-  completeTask 
+  completeTask,
+  loggedInUser
 }) => {
   const todayTasks = getTodayTasks();
   const today = getTodayString();
@@ -41,23 +44,35 @@ const MainDashboard = ({
         </div>
       </div>
 
+      <button
+        onClick={() => checkIn(member)}
+        className="bg-green-500 text-white px-8 py-4 rounded-lg hover:bg-green-600 transition-all align-center"
+      >
+        <Clock className="w-5 h-5 inline mr-2" />
+        Absen
+      </button>
+
+      <h3 className="text-2xl font-bold mb-4">Lihat Dasbor Individual</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         {houseMembers.map(member => (
           <button
-            key={member}
+            key={`dashboard-${member}`}
             onClick={() => {
               setCurrentUser(member);
               setCurrentView('individual');
             }}
-            className="bg-white p-4 rounded-lg shadow-md hover:shadow-xl transition-all transform hover:scale-105"
+            className={`bg-white p-4 rounded-lg shadow-md hover:shadow-xl transition-all transform hover:scale-105 ${member === loggedInUser ? 'ring-2 ring-blue-500' : ''}`}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <User className="w-8 h-8 text-blue-500" />
-                <span className="font-semibold text-lg">{member}</span>
+                <User className={`w-8 h-8 ${member === loggedInUser ? 'text-blue-500' : 'text-gray-400'}`} />
+                <span className="font-semibold text-lg">
+                  {member}
+                  {member === loggedInUser && <span className="text-xs ml-2 text-blue-500">(Anda)</span>}
+                </span>
               </div>
               <div className="text-right">
-                <div className="text-sm text-gray-500">Skor</div>
+                <div className="text-sm text-gray-500">Lihat Dasbor</div>
                 <div className="text-xl font-bold text-purple-600">
                   {scores.individuals[member] || 0}
                 </div>

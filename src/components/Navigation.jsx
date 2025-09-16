@@ -1,7 +1,7 @@
 import { h } from 'preact';
-import { Home, BarChart3, CalendarDays, Plus } from 'lucide-preact';
+import { Home, BarChart3, CalendarDays, Plus, LogOut } from 'lucide-preact';
 
-const Navigation = ({ currentView, setCurrentView, setCurrentUser, currentUser }) => (
+const Navigation = ({ currentView, setCurrentView, setCurrentUser, currentUser, onLogout }) => (
   <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 shadow-lg">
     <div className="max-w-7xl mx-auto flex justify-between items-center">
       <div className="flex items-center space-x-2">
@@ -36,6 +36,13 @@ const Navigation = ({ currentView, setCurrentView, setCurrentUser, currentUser }
         >
           <Plus className="w-5 h-5 inline mr-2" />
           Buat Tugas
+        </button>
+        <button
+          onClick={onLogout}
+          className="px-4 py-2 rounded-lg transition-all text-white hover:bg-white/10"
+          title="Keluar"
+        >
+          <LogOut className="w-5 h-5 inline" />
         </button>
       </nav>
     </div>
